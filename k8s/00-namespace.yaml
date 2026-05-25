@@ -1,0 +1,12 @@
+
+# A Namespace is a logical partition within the cluster. Grouping all of
+# shortly's resources here keeps them isolated and easy to manage —
+# `kubectl get all -n shortly` shows everything, and `kubectl delete
+# namespace shortly` cleanly removes the whole app in one command.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shortly
+  labels:
+    app.kubernetes.io/part-of: shortly
