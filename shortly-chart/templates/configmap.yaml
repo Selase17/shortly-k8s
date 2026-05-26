@@ -1,0 +1,13 @@
+
+# Injects Redis connection config into the app as env vars.
+# Note REDIS_HOST is just "redis" — the Redis Service name, resolved by
+# cluster DNS. We template it from values so it's configurable, but it
+# maps to the Service we defined in redis.yaml.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shortly-config
+data:
+  REDIS_HOST: {{ .Values.app.config.redisHost | quote }}
+  REDIS_PORT: {{ .Values.app.config.redisPort | quote }}
+  REDIS_DB: {{ .Values.app.config.redisDb | quote }}
