@@ -1,0 +1,55 @@
+
+# ─────────────────────────────────────────────────────────────────────
+# values.yaml — all configurable settings for the shortly chart.
+# Change behaviour HERE, not in the templates. This is the single source
+# of truth for configuration. Override per-environment with -f myvalues.yaml.
+# ─────────────────────────────────────────────────────────────────────
+
+# Namespace the app installs into (managed via --create-namespace at install)
+namespace: shortly
+
+# ── Application settings ──────────────────────────────────────────────
+app:
+  name: shortly
+  replicas: 2                      # how many app pods — the horizontal scale
+  containerPort: 5000
+
+  image:
+    repository: selase/shortly-app
+    tag: "latest"
+    pullPolicy: Always             # always pull, so :latest is never stale
+
+  service:
+    type: NodePort                 # how the app is exposed (NodePort for minikube)
+    port: 80                       # service port (maps to containerPort)
+
+  # Config injected into the app as environment variables (via ConfigMap).
+  config:
+    redisHost: redis               # the Redis Service name (cluster DNS)
+    redisPort: 6379
+    redisDb: 0
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# ── Redis settings ────────────────────────────────────────────────────
+redis:
+  replicas: 1                      # single Redis instance (our shared state)
+  port: 6379
+
+  image:
+    repository: redis
+    tag: "7.4-alpine"
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

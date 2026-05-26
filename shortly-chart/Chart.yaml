@@ -1,0 +1,13 @@
+
+apiVersion: v2
+name: shortly
+description: A Helm chart for the shortly URL shortener — a stateless Flask app backed by Redis
+type: application
+
+# version: the version of THIS CHART (the packaging). Bump when you change
+# the chart's templates or structure.
+version: 0.1.0
+
+# appVersion: the version of the APPLICATION being deployed. Tracks the
+# shortly-app release this chart deploys. Quoted because it's a label, not a number.
+appVersion: "0.2.0"
