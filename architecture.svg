@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title { font-size: 20px; font-weight: 700; fill: #1A2438; }
+      .sub { font-size: 12px; fill: #6B7590; }
+      .nslabel { font-size: 13px; font-weight: 700; fill: #326CE5; letter-spacing: 0.5px; }
+      .podtitle { font-size: 13px; font-weight: 600; fill: #1A2438; }
+      .podsub { font-size: 10.5px; fill: #6B7590; }
+      .nodelabel { font-size: 11px; font-weight: 600; fill: #3D4866; }
+      .svc { font-size: 11px; font-weight: 600; fill: #B8784C; }
+      .flow { font-size: 10.5px; fill: #6B7590; }
+      .edge { stroke: #B8784C; stroke-width: 2; fill: none; }
+      .edge-dash { stroke: #9AA3B8; stroke-width: 1.5; fill: none; stroke-dasharray: 4 4; }
+    </style>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#B8784C"/>
+    </marker>
+    <marker id="arrow-grey" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#9AA3B8"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="40" y="40" class="title">shortly on Kubernetes</text>
+  <text x="40" y="60" class="sub">Stateless Flask app + Redis, deployed across a 2-node cluster, with Prometheus/Grafana observability</text>
+
+  <!-- ============ CLIENT ============ -->
+  <rect x="40" y="95" width="130" height="50" rx="8" fill="#F4F1EB" stroke="#D9D3C8"/>
+  <text x="105" y="118" text-anchor="middle" class="podtitle">Client</text>
+  <text x="105" y="134" text-anchor="middle" class="podsub">curl / browser</text>
+
+  <!-- client to service -->
+  <path d="M170 120 L 250 120" class="edge" marker-end="url(#arrow)"/>
+  <text x="178" y="112" class="flow">HTTP</text>
+
+  <!-- ============ shortly NAMESPACE ============ -->
+  <rect x="250" y="80" width="610" height="340" rx="12" fill="#FAFBFD" stroke="#326CE5" stroke-width="1.5"/>
+  <text x="270" y="105" class="nslabel">namespace: shortly</text>
+
+  <!-- shortly Service -->
+  <rect x="270" y="120" width="150" height="46" rx="8" fill="#FBF3EA" stroke="#B8784C"/>
+  <text x="345" y="139" text-anchor="middle" class="svc">Service: shortly</text>
+  <text x="345" y="155" text-anchor="middle" class="podsub">NodePort :80 → :5000</text>
+
+  <!-- service fans out to 2 app pods -->
+  <path d="M420 143 C 460 143, 460 230, 510 230" class="edge" marker-end="url(#arrow)"/>
+  <path d="M420 143 C 460 143, 460 330, 510 330" class="edge" marker-end="url(#arrow)"/>
+  <text x="432" y="200" class="flow">load-balanced</text>
+  <text x="432" y="214" class="flow">by label app=shortly</text>
+
+  <!-- App Pod 1 (on node minikube) -->
+  <rect x="510" y="205" width="200" height="52" rx="8" fill="#EAF0FB" stroke="#326CE5"/>
+  <text x="610" y="226" text-anchor="middle" class="podtitle">shortly pod (replica 1)</text>
+  <text x="610" y="242" text-anchor="middle" class="podsub">selase/shortly-app:latest</text>
+  <text x="724" y="230" class="nodelabel">node:</text>
+  <text x="724" y="244" class="nodelabel">minikube</text>
+
+  <!-- App Pod 2 (on node m02) -->
+  <rect x="510" y="305" width="200" height="52" rx="8" fill="#EAF0FB" stroke="#326CE5"/>
+  <text x="610" y="326" text-anchor="middle" class="podtitle">shortly pod (replica 2)</text>
+  <text x="610" y="342" text-anchor="middle" class="podsub">selase/shortly-app:latest</text>
+  <text x="724" y="330" class="nodelabel">node:</text>
+  <text x="724" y="344" class="nodelabel">minikube-m02</text>
+
+  <!-- both app pods to redis service -->
+  <path d="M610 257 C 610 280, 410 300, 360 330 L 358 358" class="edge" marker-end="url(#arrow)"/>
+  <path d="M510 331 C 450 331, 410 345, 372 372" class="edge" marker-end="url(#arrow)"/>
+
+  <!-- Redis Service -->
+  <rect x="270" y="360" width="150" height="44" rx="8" fill="#FBF3EA" stroke="#B8784C"/>
+  <text x="345" y="378" text-anchor="middle" class="svc">Service: redis</text>
+  <text x="345" y="394" text-anchor="middle" class="podsub">ClusterIP :6379</text>
+
+  <!-- ConfigMap (floating annotation) -->
+  <rect x="270" y="190" width="150" height="44" rx="8" fill="#F4F1EB" stroke="#D9D3C8"/>
+  <text x="345" y="208" text-anchor="middle" class="podtitle" font-size="12">ConfigMap</text>
+  <text x="345" y="224" text-anchor="middle" class="podsub">REDIS_HOST=redis</text>
+  <path d="M420 212 C 450 212, 470 215, 508 222" class="edge-dash" marker-end="url(#arrow-grey)"/>
+  <text x="430" y="248" class="flow" fill="#9AA3B8">injected as env</text>
+
+  <!-- Redis Pod -->
+  <rect x="455" y="372" width="180" height="0" /> <!-- spacer -->
+  <text x="345" y="418" text-anchor="middle" class="podsub" fill="#9AA3B8">↓ routes to</text>
+
+  <!-- ============ Redis pod sits just below its service, drawn compact ============ -->
+  <rect x="270" y="425" width="150" height="40" rx="8" fill="#FCEAEA" stroke="#C0392B"/>
+  <text x="345" y="442" text-anchor="middle" class="podtitle" font-size="12">redis pod</text>
+  <text x="345" y="457" text-anchor="middle" class="podsub">redis:7.4-alpine</text>
+  <path d="M345 404 L 345 425" class="edge" marker-end="url(#arrow)"/>
+
+  <!-- ============ monitoring NAMESPACE ============ -->
+  <rect x="250" y="480" width="610" height="110" rx="12" fill="#FAFBFD" stroke="#326CE5" stroke-width="1.5"/>
+  <text x="270" y="505" class="nslabel">namespace: monitoring</text>
+
+  <rect x="270" y="515" width="170" height="50" rx="8" fill="#FFF4E6" stroke="#E67E22"/>
+  <text x="355" y="535" text-anchor="middle" class="podtitle" font-size="12">Prometheus</text>
+  <text x="355" y="551" text-anchor="middle" class="podsub">scrapes metrics</text>
+
+  <rect x="460" y="515" width="170" height="50" rx="8" fill="#FFF4E6" stroke="#E67E22"/>
+  <text x="545" y="535" text-anchor="middle" class="podtitle" font-size="12">Grafana</text>
+  <text x="545" y="551" text-anchor="middle" class="podsub">dashboards</text>
+
+  <rect x="650" y="515" width="190" height="50" rx="8" fill="#FFF4E6" stroke="#E67E22"/>
+  <text x="745" y="532" text-anchor="middle" class="podtitle" font-size="11.5">exporters</text>
+  <text x="745" y="548" text-anchor="middle" class="podsub">node-exporter,</text>
+  <text x="745" y="560" text-anchor="middle" class="podsub">kube-state-metrics</text>
+
+  <!-- prometheus scrapes (dashed up into shortly ns) -->
+  <path d="M440 528 C 460 510, 470 470, 466 358" class="edge-dash" marker-end="url(#arrow-grey)"/>
+  <text x="455" y="450" class="flow" fill="#9AA3B8" transform="rotate(-78 455 450)">scrape</text>
+
+  <!-- grafana queries prometheus -->
+  <path d="M460 540 L 442 540" class="edge-dash" marker-end="url(#arrow-grey)"/>
+
+  <!-- Deployed via Helm caption -->
+  <text x="40" y="190" class="sub" font-weight="600" fill="#3D4866">Deployed via:</text>
+  <text x="40" y="210" class="podsub">• raw manifests</text>
+  <text x="40" y="226" class="podsub">  (kubectl apply -f k8s/)</text>
+  <text x="40" y="248" class="podsub">• Helm chart</text>
+  <text x="40" y="264" class="podsub">  (helm install</text>
+  <text x="40" y="280" class="podsub">  shortly ./shortly-chart)</text>
+
+  <text x="40" y="320" class="sub" font-weight="600" fill="#3D4866">Monitoring via:</text>
+  <text x="40" y="340" class="podsub">• kube-prometheus-stack</text>
+  <text x="40" y="356" class="podsub">  (Helm)</text>
+</svg>
